@@ -28,10 +28,11 @@ jobs:
           RUSTFLAGS: -C target-cpu=core-avx2 -C target-feature=-avx512f
         run: cargo build --release --locked --target=x86_64-pc-windows-msvc
 
-      - name: Build and publish
-        uses: taiki-e/upload-rust-binary-action@v1
-        with:
-          bin: qdrant
-          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Package binary (zip)
+        run: |
+          Compress-Archive -Path "target\x86_64-pc-windows-msvc\release\qdrant.exe" -DestinationPath "qdrant-windows-x64.zip" -CompressionLevel Optimal
 
- 
+      - name: Upload to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: qdrant-windows-x64.zip
