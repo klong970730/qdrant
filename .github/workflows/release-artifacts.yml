@@ -24,7 +24,9 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
-        run: cargo build --release --locked --target=x86_64-pc-windows-msvc -C target-cpu=core-avx2 -C target-feature=-avx512f
+        env:
+          RUSTFLAGS: -C target-cpu=core-avx2 -C target-feature=-avx512f
+        run: cargo build --release --locked --target=x86_64-pc-windows-msvc
 
       - name: Build and publish
         uses: taiki-e/upload-rust-binary-action@v1
